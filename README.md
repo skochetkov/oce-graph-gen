@@ -12,22 +12,23 @@ Make sure you have the following before installing igraph:
 
 The standard installation method uses the autoconf/automake toolset. Run the following commands from the top-level directory of the code.
 
+```
 ./configure
-
  make
- 
  make check
- 
  make install
- 
+ ```
 To run sample example 'oce_graph_gen':
-
+```
 gcc oce_graph_gen.c -Iigraph/include -L/usr/local/lib -ligraph -o oce_graph_gen
-
+```
 Providing that igraph libraries are installed in /usr/local/lib
 
 For MacOS using homebrew:
-
+```
 brew install igraph
+```
+
+For more information about igraph library go to:
 
 http://igraph.org/c/doc/index.html
