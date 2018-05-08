@@ -1,15 +1,17 @@
-# OCE Graph Generator
+## OCE Graph Generator
 OCE network graph generator project using igraph
 
-# Installation
+### Installation
 
-Requirements
+#### Requirements
+
 Make sure you have the following before installing igraph:
 
 - C and C++ compilers such as gcc.
 - The GNU make tool.
 - Optionally the libxml2 library for reading GraphML files.
 
+#### Compilation
 The standard installation method uses the autoconf/automake toolset. Run the following commands from the top-level directory of the code.
 
 ```
@@ -18,13 +20,15 @@ The standard installation method uses the autoconf/automake toolset. Run the fol
  make check
  make install
  ```
+ #### Running OCE Graph Gen
 To run sample example 'oce_graph_gen':
 ```
 gcc oce_graph_gen.c -Iigraph/include -L/usr/local/lib -ligraph -o oce_graph_gen
 ```
 Providing that igraph libraries are installed in /usr/local/lib
 
-For MacOS using homebrew:
+*Note: For MacOS You can use the regular Unix way, or Homebrew, the homebrew/science/igraph formula.
+Example:
 ```
 brew install igraph
 ```
