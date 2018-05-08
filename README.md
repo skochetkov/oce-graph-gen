@@ -36,3 +36,7 @@ brew install igraph
 For more information about igraph library go to:
 
 http://igraph.org/c/doc/index.html
+
+## Basics
+
+[Data structure library: vector, matrix, other data types](http://igraph.org/c/doc/ch07.html)
