@@ -1,33 +1,69 @@
 #include <igraph.h>
 
-int main(void) {
-  igraph_real_t avg_path;
-  igraph_t graph;
-  igraph_vector_t dimvector;
-  igraph_vector_t edges;
-  int i;
-  
-  igraph_vector_init(&dimvector, 2);
-  VECTOR(dimvector)[0]=30;
-  VECTOR(dimvector)[1]=30;
-  igraph_lattice(&graph, &dimvector, 0, IGRAPH_UNDIRECTED, 0, 1);
-
-  igraph_rng_seed(igraph_rng_default(), 42);
-  igraph_vector_init(&edges, 20);
-  for (i=0; i<igraph_vector_size(&edges); i++) {
-    VECTOR(edges)[i] = rand() % (int)igraph_vcount(&graph);
+void print_vector(igraph_vector_t *v, FILE *f) {
+  long int i;
+  for (i=0; i<igraph_vector_size(v); i++) {
+    fprintf(f, " %li", (long int) VECTOR(*v)[i]);
   }
+  fprintf(f, "\n");
+}
 
-  igraph_average_path_length(&graph, &avg_path, IGRAPH_UNDIRECTED, 1);
-  printf("Average path length (lattice):            %f\n", (double) avg_path);
+int main() {
 
-  igraph_add_edges(&graph, &edges, 0);
-  igraph_average_path_length(&graph, &avg_path, IGRAPH_UNDIRECTED, 1);
-  printf("Average path length (randomized lattice): %f\n", (double) avg_path);
+  igraph_t g;
+  igraph_vector_t v;
+  int ret;
+
+  /* Create graph */
+  igraph_vector_init(&v, 8);
+  VECTOR(v)[0]=0; VECTOR(v)[1]=1;
+  VECTOR(v)[2]=1; VECTOR(v)[3]=2;
+  VECTOR(v)[4]=2; VECTOR(v)[5]=3;
+  VECTOR(v)[6]=2; VECTOR(v)[7]=2;
+  igraph_create(&g, &v, 0, 1);
+
+  /* Add edges */
+  igraph_vector_resize(&v, 4);
+  VECTOR(v)[0]=2; VECTOR(v)[1]=1;
+  VECTOR(v)[2]=3; VECTOR(v)[3]=3;
+  igraph_add_edges(&g, &v, 0);
   
-  igraph_vector_destroy(&dimvector);
-  igraph_vector_destroy(&edges);
-  igraph_destroy(&graph);
+  /* Check result */
+  igraph_get_edgelist(&g, &v, 0);
+  igraph_vector_sort(&v);
+  print_vector(&v, stdout);
+
+  /* Error, vector length */
+  igraph_set_error_handler(igraph_error_handler_ignore);
+  igraph_vector_resize(&v, 3);
+  VECTOR(v)[0]=0; VECTOR(v)[1]=1;
+  VECTOR(v)[2]=2;
+  ret=igraph_add_edges(&g, &v, 0);
+  if (ret != IGRAPH_EINVEVECTOR) {
+    return 1;
+  }
+  
+  /* Check result */
+  igraph_get_edgelist(&g, &v, 0);
+  igraph_vector_sort(&v);
+  print_vector(&v, stdout);
+
+  /* Error, vector ids */
+  igraph_vector_resize(&v, 4);
+  VECTOR(v)[0]=0; VECTOR(v)[1]=1;
+  VECTOR(v)[2]=2; VECTOR(v)[3]=4;
+  ret=igraph_add_edges(&g, &v, 0);
+  if (ret != IGRAPH_EINVVID) {
+    return 2;
+  }  
+
+  /* Check result */
+  igraph_get_edgelist(&g, &v, 0);
+  igraph_vector_sort(&v);
+  print_vector(&v, stdout);
+
+  igraph_vector_destroy(&v);
+  igraph_destroy(&g);
 
   return 0;
 }
