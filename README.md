@@ -20,6 +20,36 @@ The standard installation method uses the autoconf/automake toolset. Run the fol
  make check
  make install
  ```
+ 
+ #### Running OCE Core
+ 
+ OCE Core is Java client that connects to C module (oce_core.c) using JNI
+ For MacOS it can be run:
+ ```
+$ gcc -shared -fPIC -I$(/usr/libexec/java_home -v 1.8)/include -I$(/usr/libexec/java_home -v 1.8)/include/darwin oce_core.c -o libOCECore.jnilib
+$ javac OCECore.java
+$ javah -classpath . OCECore
+$ java -classpath . -Djava.library.path=. OCECore
+```
+where 
+```
+gcc -shared -fPIC ...
+```
+compiles and creates library for oce_core.c
+```
+javac OCECore.java
+```
+compiles Java client
+```
+javah -classpath . OCECore
+```
+generates header file
+
+```
+java -classpath . -Djava.library.path=. OCECore
+```
+runs OCECore java class (with library path specified to find generated c module library)
+
  #### Running OCE Graph Gen
 To run sample example 'oce_graph_gen':
 ```
